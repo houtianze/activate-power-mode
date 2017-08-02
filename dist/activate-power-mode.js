@@ -69,6 +69,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var particles = [];
 	var particlePointer = 0;
 	var rendering = false;
+	var baseBodyMarginTop = {};
+	var baseBodyMarginLeft = {};
 
 	POWERMODE.shake = true;
 
@@ -127,6 +129,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    };
 	}
+	POWERMODE.shakeIntensity = 1;
 
 	function POWERMODE() {
 	    { // spawn particles
@@ -139,14 +142,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	    { // shake screen
 	        if (POWERMODE.shake) {
-	            var intensity = 1 + 2 * Math.random();
+	            var intensity = POWERMODE.shakeIntensity + POWERMODE.shakeIntensity * 2 * Math.random();
 	            var x = intensity * (Math.random() > 0.5 ? -1 : 1);
 	            var y = intensity * (Math.random() > 0.5 ? -1 : 1);
-	            document.body.style.marginLeft = x + 'px';
-	            document.body.style.marginTop = y + 'px';
+	            var style = document.body.style
+	            style.marginLeft = (baseBodyMarginLeft.value + x) + baseBodyMarginLeft.unit;
+	            style.marginTop = (baseBodyMarginTop.value + y) + baseBodyMarginTop.unit;
 	            setTimeout(function() {
-	                document.body.style.marginLeft = '';
-	                document.body.style.marginTop = '';
+	                style.marginLeft = baseBodyMarginLeft.value + baseBodyMarginLeft.unit;
+	                style.marginTop = baseBodyMarginTop.value + baseBodyMarginTop.unit;
 	            }, 75);
 	        }
 	    }
@@ -154,7 +158,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        requestAnimationFrame(loop);
 	    }
 	};
-	POWERMODE.colorful = false;
+	POWERMODE.colorful = true;
 
 	function loop() {
 	    rendering = true;
@@ -183,6 +187,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	        rendering = false;
 	    }
 	}
+
+	function splitValueAndUnit(measurement) {
+	    var r = {};
+	    var i = 0;
+	    for (; i < measurement.length; i++) {
+	        var c = measurement[i]
+	        if (c > '9' || c < '0')  {
+	            break;
+	        }
+	    }
+	    r.value = parseFloat(measurement.substring(0, i))
+	    r.unit =  measurement.substring(i).trim()
+	    return r
+	}
+
+	document.addEventListener("DOMContentLoaded", function(event) {
+	    var p = document.body;
+	    var style = p.currentStyle || window.getComputedStyle(p);
+
+	    baseBodyMarginLeft = splitValueAndUnit(style.marginLeft)
+	    baseBodyMarginTop = splitValueAndUnit(style.marginTop)
+
+	  });
 
 	module.exports = POWERMODE;
 
