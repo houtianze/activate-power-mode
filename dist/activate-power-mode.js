@@ -72,8 +72,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	var baseBodyMarginTop = {};
 	var baseBodyMarginLeft = {};
 
-	POWERMODE.shake = true;
-
 	function getRandom(min, max) {
 	    return Math.random() * (max - min) + min;
 	}
@@ -129,12 +127,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    };
 	}
-	POWERMODE.shakeIntensity = 1;
 
 	function POWERMODE() {
 	    { // spawn particles
 	        var caret = getCaret();
-	        var numParticles = 5 + Math.round(Math.random() * 10);
+	        var numParticles = POWERMODE.minParticles
+	            + Math.round(Math.random() * (POWERMODE.maxParticles - POWERMODE.minParticles));
 	        while (numParticles--) {
 	            particles[particlePointer] = createParticle(caret.x, caret.y, caret.color);
 	            particlePointer = (particlePointer + 1) % 500;
@@ -158,7 +156,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        requestAnimationFrame(loop);
 	    }
 	};
-	POWERMODE.colorful = true;
 
 	function loop() {
 	    rendering = true;
@@ -210,6 +207,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    baseBodyMarginTop = splitValueAndUnit(style.marginTop)
 
 	  });
+
+	POWERMODE.shake = true;
+	POWERMODE.shakeIntensity = 1;
+	POWERMODE.colorful = true;
+	POWERMODE.minParticles = 2;
+	POWERMODE.maxParticles = 8;
 
 	module.exports = POWERMODE;
 

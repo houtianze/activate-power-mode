@@ -16,8 +16,6 @@ var rendering = false;
 var baseBodyMarginTop = {};
 var baseBodyMarginLeft = {};
 
-POWERMODE.shake = true;
-
 function getRandom(min, max) {
     return Math.random() * (max - min) + min;
 }
@@ -73,12 +71,12 @@ function createParticle(x, y, color) {
         }
     };
 }
-POWERMODE.shakeIntensity = 1;
 
 function POWERMODE() {
     { // spawn particles
         var caret = getCaret();
-        var numParticles = 5 + Math.round(Math.random() * 10);
+        var numParticles = POWERMODE.minParticles
+            + Math.round(Math.random() * (POWERMODE.maxParticles - POWERMODE.minParticles));
         while (numParticles--) {
             particles[particlePointer] = createParticle(caret.x, caret.y, caret.color);
             particlePointer = (particlePointer + 1) % 500;
@@ -102,7 +100,6 @@ function POWERMODE() {
         requestAnimationFrame(loop);
     }
 };
-POWERMODE.colorful = true;
 
 function loop() {
     rendering = true;
@@ -154,5 +151,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
     baseBodyMarginTop = splitValueAndUnit(style.marginTop)
 
   });
+
+POWERMODE.shake = true;
+POWERMODE.shakeIntensity = 1;
+POWERMODE.colorful = true;
+POWERMODE.minParticles = 2;
+POWERMODE.maxParticles = 8;
 
 module.exports = POWERMODE;
